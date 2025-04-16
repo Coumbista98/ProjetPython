@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.preprocessing import MinMaxScaler
 from io import StringIO
+import os
 
 # Flask instance
 app = Flask(__name__)
@@ -129,4 +130,5 @@ def upload_csv():
     df.to_csv('donnees_traitees.csv', index=False)  
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port= int(os.environ.get('PORT',5000))
+    app.run(host='0.0.0.0',port=port)
