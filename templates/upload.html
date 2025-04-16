@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Uploader file CSV</title>
+</head>
+<body>
+    <h2>Upload a CSV file</h2>
+    
+    <form id="uploadForm" action="/" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".csv" required><br><br>
+        <button type="submit">Send</button>
+    </form>
+
+    <pre id="result"></pre> <!-- Zone d'affichage des résultats -->
+
+    <script>
+        const form = document.getElementById('uploadForm');
+        const result = document.getElementById('result');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('/upload_csv', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    result.textContent = JSON.stringify(data, null, 2);
+                } else {
+                    result.textContent = `Erreur : ${data.error}`;
+                }
+
+            } catch (error) {
+                result.textContent = `Erreur réseau : ${error}`;
+            }
+        });
+    </script>
+</body>
+</html>

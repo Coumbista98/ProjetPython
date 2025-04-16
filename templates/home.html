@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="mt-4">
+    <h2>Upload a CSV file</h2>
+    <form id="uploadForm" enctype="multipart/form-data" action="/upload_csv" method="POST">
+        <div class="mb-3">
+            <input class="form-control" type="file" name="file" accept=".csv" required>
+        </div>
+        <button class="btn btn-primary" type="submit">Send</button>
+    </form>
+
+    <div class="mt-4">
+        <h4>Result :</h4>
+        <pre id="result" class="bg-light p-3 border rounded"></pre>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById('uploadForm');
+    const result = document.getElementById('result');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch('/upload_csv', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                result.textContent = JSON.stringify(data, null, 2);
+            } else {
+                result.textContent = `Erreur : ${data.error}`;
+            }
+
+        } catch (error) {
+            result.textContent = `Erreur réseau : ${error}`;
+        }
+    });
+</script>
+{% endblock content %}
